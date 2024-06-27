@@ -28,6 +28,14 @@ def process_response(response: dict) -> dict:
                     response[key] = True
                 case 'disable':
                     response[key] = False
+                case 'Alive':
+                    response[key] = True
+                case 'Dead':
+                    response[key] = False
+                case 'Y':
+                    response[key] = True
+                case 'N':
+                    response[key] = False
                 case '':
                     response[key] = None
                     
@@ -43,9 +51,11 @@ def process_response(response: dict) -> dict:
                 response[key] = timedelta(seconds=response[key])
             case 'Elapsed':
                 response[key] = timedelta(seconds=response[key])
+            case 'Upfreq Complete':
+                response[key] = bool(response[key])
             case 'upfreq_complete':
-                response[key] = bool(value)
+                response[key] = bool(response[key])
             case 'enable':
-                response[key] = bool(value)
+                response[key] = bool(response[key])
                 
     return response

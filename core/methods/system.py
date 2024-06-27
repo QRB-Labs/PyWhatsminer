@@ -1,5 +1,5 @@
 from core.api import WhatsminerAPI, WhatsminerAccessToken
-from core.models import Summary, Status, StatusMessage
+from core.models import Summary, Status, Api, Dev, Devs, DevDetail, DevDetails, Pool, Pools
 from core.utils import process_response
 
 from typing import Any
@@ -32,20 +32,18 @@ class System:
     
     
     # TODO: Check status model
-    def get_status(self) -> Any:
+    def get_status(self) -> Status:
         """
         This method returns miner's status.
         
         WARNING: Response model can be incorrect. Will be fixed in the future.
         """
         data = process_response(self.api.exec_command(self.token, "status"))
-        message = StatusMessage(*data['Msg'].values())
-        data.update({"Msg": message})
 
-        return Status(*data.values())
+        return Status(*data['Msg'].values())
     
     
-    def get_summary(self) -> Any:
+    def get_summary(self) -> Summary:
         """
         This method returns miner's summary.
         """
@@ -55,32 +53,56 @@ class System:
         return Summary(*summary.values())
     
     
-    def get_api_version(self) -> Any:
+    def get_api_version(self) -> Api:
         """
         This method returns miner's API version.
         """
-        return self.api.exec_command(self.token, "get_version")
+        data = process_response(self.api.exec_command(self.token, "get_version"))
+    
+        return Api(*data['Msg'].values())
     
     
-    def get_dev_details(self) -> Any:
+    def get_dev_details(self) -> DevDetails:
         """
         This method returns miner's device details.
         """
-        return self.api.exec_command(self.token, "details")
+        data = self.api.exec_command(self.token, "devdetails")
+        devdetails = DevDetails(details=[])
+        
+        for devdetail in data['DEVDETAILS']:
+            devdetail = process_response(devdetail)
+            devdetail.pop('ID')
+            devdetails.details.append(DevDetail(*devdetail.values()))
+    
+        return devdetails
     
     
-    def get_devs(self) -> Any:
+    def get_devs(self) -> Devs:
         """
         This method returns information for each hash board.
         """
-        return self.api.exec_command(self.token, "devs")
+        data = self.api.exec_command(self.token, "devs")
+        devs = Devs(devs=[])
+    
+        for dev in data['DEVS']:
+            dev = process_response(dev)
+            devs.devs.append(Dev(*dev.values()))
+    
+        return devs
     
     
-    def get_pools(self) -> Any:
+    def get_pools(self) -> Pools:
         """
         This method returns pool miner information.
         """
-        return self.api.exec_command(self.token, "pools")
+        data = self.api.exec_command(self.token, "pools")
+        pools = Pools(pools=[])
+        
+        for pool in data['POOLS']:
+            pool = process_response(pool)
+            pools.pools.append(Pool(*pool.values()))
+            
+        return pools    
     
     
     # TODO: Implement this

@@ -4,7 +4,7 @@ from distutils.core import setup
 setup(
   name = 'pywhatsminer',
   packages = ['pywhatsminer'],
-  version = '0.1.3',
+  version = '0.1.4',
   license='MIT',
   description = 'Unofficial Python based Api-Client (Wrapper) for MicroBT Whatsminer ASIC's',
   long_description="See full README at https://github.com/DAAMCS/PyWhatsminer",

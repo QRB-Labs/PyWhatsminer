@@ -42,7 +42,7 @@ class Summary:
 # TODO: Validate models, maybe incorrect. Needs some tests.
 @dataclass_json
 @dataclass
-class StatusMessage:
+class Status:
     miner_off: bool
     miner_off_reason: str
     miner_off_time: int
@@ -50,21 +50,11 @@ class StatusMessage:
     power_mode: str
     power_limit_set: bool
     hash_percent: int
-    
-    
-@dataclass_json
-@dataclass
-class Status:
-    status: str
-    when: datetime
-    code: int
-    message: StatusMessage
-    description: str
-    
+
 
 @dataclass_json
 @dataclass
-class PSU_Message:
+class PSU:
     name: str
     hardware_version: str
     software_version: str 
@@ -77,13 +67,94 @@ class PSU_Message:
     serial_no: str
     vendor: int
     temperature: float
-
+    
+    
+@dataclass_json
+@dataclass
+class Api:
+    version: str
+    firmware_version: str
+    platform: str
+    chip: str
+    
+    
+@dataclass_json
+@dataclass
+class DevDetail:
+    id: int
+    name: str
+    driver: str
+    kernel: str
+    model: str
+    
+    
+@dataclass_json
+@dataclass
+class DevDetails:
+    details: list[DevDetail]
+    
+    
+@dataclass_json
+@dataclass
+class Dev:
+    asc: int
+    slot: int
+    enabled: bool
+    is_alive: bool
+    temperature: float
+    chip_frequency: int
+    mhs_av: float
+    mhs_5s: float
+    mhs_1m: float
+    mhs_5m: float
+    mhs_15m: float
+    hs_rate: float
+    factory_ghs: int
+    upfreq_complete: bool
+    effective_chips: int
+    pcb_serial_no: str
+    chip_data: str
+    chip_temp_min: float
+    chip_temp_max: float
+    chip_temp_avg: float
+    chip_vol_diff: int
+    
 
 @dataclass_json
 @dataclass
-class PSU:
-    status: str
-    when: datetime
-    code: int
-    message: dict
-    description: str
+class Devs:
+    devs: list[Dev]
+    
+
+@dataclass_json
+@dataclass
+class Pool:
+    id: int
+    url: str
+    is_alive: bool
+    priority: int
+    quota: int
+    getworks: int
+    accepted: int
+    rejected: int
+    works: int
+    discarded: int
+    stale: int
+    get_failures: int
+    remote_failures: int
+    user: str
+    last_share_time: datetime
+    stratum_is_active: bool
+    stratum_difficulty: float
+    pool_rejected_percent: float
+    pool_stale_percent: float
+    bad_works: int
+    current_block_height: int
+    current_block_version: int
+    to_remove: bool
+    
+
+@dataclass_json
+@dataclass
+class Pools:
+    pools: list[Pool]

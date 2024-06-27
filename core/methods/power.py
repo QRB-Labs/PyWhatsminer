@@ -1,5 +1,5 @@
 from core.api import WhatsminerAPI, WhatsminerAccessToken
-from core.models import PSU, PSU_Message
+from core.models import PSU
 from core.utils import process_response
 
 from typing import Any
@@ -54,7 +54,5 @@ class Power:
         This method returns miner's power system status.
         """
         data = process_response(self.api.exec_command(self.token, "get_psu"))
-        message = PSU_Message(*data['Msg'].values())
-        data.update({"Msg": message})
 
-        return PSU(*data.values())
+        return PSU(*data['Msg'].values())
