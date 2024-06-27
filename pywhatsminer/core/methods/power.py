@@ -46,13 +46,61 @@ class Power:
         """
         assert mode in ["low", "normal", "high"]
         
-        return self.api.exec_command(self.token, "switch_mode", {"mode": mode})
+        return self.api.exec_command(self.token, f"set_{mode}_power")
 
 
-    def get_psu(self) -> Any:
+    def get_psu(self) -> PSU:
         """
         This method returns miner's power system status.
         """
         data = process_response(self.api.exec_command(self.token, "get_psu"))
 
         return PSU(*data['Msg'].values())
+    
+    
+    def set_percent(self, percent: int) -> Any:
+        """
+        Temporarily set the power percent based on the current running power. 
+        It is recommended to be used for temporary adjustment. Long run maybe unstable. 
+        If you want the machine run for a long time in low power percent, see `Client.Power.adjust_limit()`
+        
+        Params:
+            - percent: int - new power output percentage. Range: 0 to 100.
+        """
+        return self.api.exec_command(self.token, "set_power_pct", {"percent": percent})
+    
+    
+    def adjust_limit(self, limit: int) -> Any:
+        """
+        This operation sets the upper limit of the miner's power. 
+        Not higher than the ordinary power of the machine.
+        If the Settings take effect, the machine will restart.
+
+        Params:
+            - limit: int - new power limit percentage. Range: 0 to 99999.
+        """
+        assert limit in range(0, 100000)
+        
+        return self.api.exec_command(self.token, "adjust_power_limit", {"power_limit":limit})
+    
+    
+    def pre_power_on(self) -> Any:
+        """
+        The miner can be preheated by `pre_power_on` before `power_on`, so that the machine
+        can quickly enter the full power state when "power on" is used. 
+        
+        You can also use this
+        command to query the pre power on status. Make sure `power_off` btminer before
+        `pre_power_on`. 
+        
+        Response:
+            - complete: bool
+            - query: str - query the status. Possible fields: "wait for adjust temp", "adjust complete", "adjust continue"
+
+        1. "wait for adjust temp": The temperature adjustment of the miner is not completed. 
+        2. "adjust complete": The temperature adjustment of the miner is completed, and miner can be power on.
+        3. "adjust continue": Miner is adjusting the temperature while waiting to end. 
+        
+        The value of "complete" is true after the temperature adjustment is complete.
+        """
+        return self.api.exec_command(self.token, "pre_power_on")

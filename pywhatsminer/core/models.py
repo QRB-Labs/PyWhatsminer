@@ -158,3 +158,32 @@ class Pool:
 @dataclass
 class Pools:
     pools: list[Pool]
+    
+    
+@dataclass_json
+@dataclass
+class Info:
+    ntp: list[str] | None = None
+    ip: str | None = None
+    proto: str | None = None
+    netmask: str | None = None
+    gateway: str | None = None
+    dns: str | None = None
+    hostname: str | None = None
+    mac: str | None = None
+    ledstat: str | None = None
+    minersn: str | None = None
+    powersn: str | None = None
+    
+    
+@dataclass_json
+@dataclass
+class ErrorCode:
+    code: int
+    appeared_at: datetime
+
+
+@dataclass_json
+@dataclass
+class Errors:
+    codes = list[ErrorCode]

@@ -105,13 +105,39 @@ class System:
         return pools    
     
     
+    def get_miner_info(self, *fields: str) -> Any:
+        """
+        This method returns miner's information.
+        Params:
+            - *fields: str - you can select the fields that you want to return, returns all if not specified.
+        
+        WARNING: looks like fields are not working, in any case api returns all fields in response.
+        """
+        data = self.api.exec_command(self.token, "get_miner_info", {'info':f"{",".join(fields)}"})
+        info = Info(**data['Msg'])
+        
+        return info
+    
+    
+    # TODO: Implement this
+    def get_error_codes(self) -> Any:
+        """
+        This method returns miner's error codes.
+        
+        WARNING: This method actually don't parse response and gives raw json in response. Will be implemented in the future.
+        """
+        data = self.api.exec_command(self.token, "get_error_code")
+        
+        return data
+
+    
     # TODO: Implement this
     @deprecated(reason="Not work. Will be implemented in the future.")
     def get_token(self) -> Any:
         """
         This method returns miner's access token.
         
-        WARNING: This method actually not work. Will be implemented in the future.
+        WARNING: This method actually don't work. Will be implemented in the future.
         """
         return self.api.exec_command(self.token, "get_token")
     
