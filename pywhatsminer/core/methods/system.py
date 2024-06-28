@@ -1,6 +1,6 @@
-from core.api import WhatsminerAPI, WhatsminerAccessToken
-from core.models import Summary, Status, Api, Dev, Devs, DevDetail, DevDetails, Pool, Pools
-from core.utils import process_response
+from pywhatsminer.core.api import WhatsminerAPI, WhatsminerAccessToken
+from pywhatsminer.core.models import Summary, Status, Api, Dev, Devs, DevDetail, DevDetails, Pool, Pools, Info, ErrorCode, Errors
+from pywhatsminer.core.utils import process_response
 
 from typing import Any
 

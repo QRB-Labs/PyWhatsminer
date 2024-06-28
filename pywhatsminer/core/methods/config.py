@@ -1,4 +1,4 @@
-from core.api import WhatsminerAPI, WhatsminerAccessToken
+from pywhatsminer.core.api import WhatsminerAPI, WhatsminerAccessToken
 from typing import Any
 
 

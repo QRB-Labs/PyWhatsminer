@@ -1,12 +1,11 @@
-from distutils.core import setup
+from setuptools import setup, find_packages
 
 
 setup(
   name = 'pywhatsminer',
-  packages = ['pywhatsminer'],
-  version = '0.1.4',
+  version = '0.1.7',
   license='MIT',
-  description = 'Unofficial Python based Api-Client (Wrapper) for MicroBT Whatsminer ASIC's',
+  description = 'Unofficial Python based Api-Client (Wrapper) for MicroBT Whatsminer ASIC`s',
   long_description="See full README at https://github.com/DAAMCS/PyWhatsminer",
   author = 'DAAMCS | Forked from Satoshi Anonymoto',
   author_email = 'me@daamcs.ru',
@@ -16,12 +15,18 @@ setup(
   install_requires=[
           'passlib',
           'pycryptodome',
+          'dataclasses-json',
+          'Deprecated'
       ],
   classifiers=[
+
     'Development Status :: 4 - Beta',
     'Intended Audience :: Developers',
     'Topic :: Software Development :: Build Tools',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
   ],
+  packages=find_packages(),
+  include_package_data=True,
 )
+

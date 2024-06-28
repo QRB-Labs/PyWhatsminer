@@ -1,6 +1,6 @@
-from core.api import WhatsminerAPI, WhatsminerAccessToken
-from core.models import PSU
-from core.utils import process_response
+from pywhatsminer.core.api import WhatsminerAPI, WhatsminerAccessToken
+from pywhatsminer.core.models import PSU
+from pywhatsminer.core.utils import process_response
 
 from typing import Any
 

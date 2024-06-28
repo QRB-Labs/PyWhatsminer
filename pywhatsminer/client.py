@@ -1,7 +1,7 @@
-from core.api import WhatsminerAccessToken, WhatsminerAPI
-from core.methods.power import Power
-from core.methods.system import System
-from core.methods.config import Config
+from pywhatsminer.core import WhatsminerAccessToken, WhatsminerAPI
+from pywhatsminer.core.methods.power import Power
+from pywhatsminer.core.methods.system import System
+from pywhatsminer.core.methods.config import Config
 
 
 class Client:
