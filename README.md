@@ -5,7 +5,7 @@ _Code adapted from a python file found in the Whatsminer Telegram group that is 
 
 
 ## Installation
-Python 3.x is required. (NOTICE: This lib has not been published in PIP yet, commands below will not work)
+Python 3.x is required.
 
 ```
 pip install pywhatsminer
@@ -32,7 +32,7 @@ Writeable `WhatsminerAccessToken` objs will renew themselves if they go past the
 You could define a whole server farm's worth of Whatsminer ASICs and manage them all in one script:
 
 ```python
-from client import Client
+from pywhatsminer import Client
 
 asics = [
     Client(ip="192.168.0.117", port=4028, password="123"),
@@ -47,7 +47,7 @@ for asic in asics:
 
 
 ## API Documentation
-It's very difficult to find any information about the Whatsminer API. This PDF documentation is slightly out of date but is the best source found so far:
+At the moment, the project is under development, so the documentation on the methods is not ready yet, but nevertheless, you can use the documentation on the methods of the Whatsminer API, which will repeat most of the names of the methods and their logic in the module.
 
 [WhatsminerAPI-V2.0.5.pdf](docs/WhatsminerAPI-V2.0.5.pdf)
 
