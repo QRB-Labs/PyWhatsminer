@@ -3,6 +3,9 @@ from typing import Any
 
 
 class Config:
+    """
+    This class provides methods for miner's configuration.
+    """
     def __init__(self, client):
         self.client = client
         self.api: WhatsminerAPI = client.api
@@ -21,6 +24,17 @@ class Config:
         This operation closes miner's SSH server.
         """
         return self.api.exec_command(self.token, "ssh_close")
+    
+    
+    # TODO: Check correctness
+    def modify_network(self, **kwargs) -> Any:
+        """
+        This operation modifies miner's network settings.
+        `WARNING`: This method is not fully implemented.
+        
+        Read more in the [official Whatsminer API documentation](https://github.com/DAAMCS/PyWhatsminer/blob/main/docs/WhatsminerAPI-V2.0.5.pdf).
+        """
+        return self.api.exec_command(self.token, "net_config", kwargs)
     
     
     def manage_led(self, color: str | None = None, period: int | None = None, duration: int | None = None, start: int | None = None) -> Any:
@@ -173,3 +187,11 @@ class Config:
             - fan_zero_speed: bool - whether the fan speed supports the lowest 0 speed
         """
         return self.api.exec_command(self.token, "set_fan_zero_speed", {"fan_zero_speed":1 if fan_zero_speed else 0})
+    
+    
+    def update_pools_information(self, pool1: str, worker1: str, password1: str, pool2: str, worker2: str, password2: str, pool3: str, worker3: str, password3: str) -> Any:
+        """
+        This operation updates the pool configuration and switches immediately.
+        """
+        return self.api.exec_command(self.token, "update_pools", {"pool1":pool1, "worker1":worker1, "passwd1":password1, "pool2":pool2, "worker2":worker2, "passwd2":password2, "pool3":pool3, "worker3":worker3, "passwd3":password3})
+    

@@ -11,13 +11,11 @@ Python 3.x is required.
 pip install pywhatsminer
 ```
 
-
 ## Basic Usage
 Instantiate a `Client` for each ASIC that you want to access. Then make read-only or writeable API calls by using the chapters and their methods.
 
 Read-only information can be retrieved with just the ASIC's ip address:
 
-_WARNGING: Actually, any method requires an admin password, the read-only calls without an admin password feature will be implemented in future versions._
 ```python
 from pywhatsminer import Client
 
@@ -34,7 +32,7 @@ asic = Client(ip="192.168.0.117", port=4028, password="SatoshiAnonymoto123")
 
 asic.Power.off()
 ```
-Tokens for writeable API calls are renewed automatically after they expire (30 minutes)
+Tokens for writeable API calls are renewed automatically after they expire (30 minutes).
 
 ### Managing multiple ASICs
 You could define a whole server farm's worth of Whatsminer ASICs and manage them all in one script:

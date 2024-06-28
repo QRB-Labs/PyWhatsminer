@@ -31,6 +31,13 @@ class System:
         return self.api.exec_command(self.token, "factory_reset")
     
     
+    def download_logs(self) -> Any:
+        """
+        This operation downloads miner's logs.
+        """
+        return self.api.exec_command(self.token, "download_logs")
+    
+    
     # TODO: Check status model
     def get_status(self) -> Status:
         """
@@ -38,7 +45,7 @@ class System:
         
         WARNING: Response model can be incorrect. Will be fixed in the future.
         """
-        data = process_response(self.api.exec_command(self.token, "status"))
+        data = process_response(self.api.get_read_only_info(self.token, "status"))
 
         return Status(*data['Msg'].values())
     
@@ -47,7 +54,7 @@ class System:
         """
         This method returns miner's summary.
         """
-        data = process_response(self.api.exec_command(self.token, "summary"))
+        data = process_response(self.api.get_read_only_info(self.token, "summary"))
         summary = process_response(data['SUMMARY'][0])
         
         return Summary(*summary.values())
@@ -57,7 +64,7 @@ class System:
         """
         This method returns miner's API version.
         """
-        data = process_response(self.api.exec_command(self.token, "get_version"))
+        data = process_response(self.api.get_read_only_info(self.token, "get_version"))
     
         return Api(*data['Msg'].values())
     
@@ -66,7 +73,7 @@ class System:
         """
         This method returns miner's device details.
         """
-        data = self.api.exec_command(self.token, "devdetails")
+        data = self.api.get_read_only_info(self.token, "devdetails")
         devdetails = DevDetails(details=[])
         
         for devdetail in data['DEVDETAILS']:
@@ -81,7 +88,7 @@ class System:
         """
         This method returns information for each hash board.
         """
-        data = self.api.exec_command(self.token, "devs")
+        data = self.api.get_read_only_info(self.token, "devs")
         devs = Devs(devs=[])
     
         for dev in data['DEVS']:
@@ -95,7 +102,7 @@ class System:
         """
         This method returns pool miner information.
         """
-        data = self.api.exec_command(self.token, "pools")
+        data = self.api.get_read_only_info(self.token, "pools")
         pools = Pools(pools=[])
         
         for pool in data['POOLS']:
@@ -111,9 +118,9 @@ class System:
         Params:
             - *fields: str - you can select the fields that you want to return, returns all if not specified.
         
-        WARNING: looks like fields are not working, in any case api returns all fields in response.
+        `WARNING`: looks like fields are not working, in any case api returns all fields in response.
         """
-        data = self.api.exec_command(self.token, "get_miner_info", {'info':f"{",".join(fields)}"})
+        data = self.api.get_read_only_info(self.token, "get_miner_info", {'info':f"{",".join(fields)}"})
         info = Info(**data['Msg'])
         
         return info
@@ -124,9 +131,9 @@ class System:
         """
         This method returns miner's error codes.
         
-        WARNING: This method actually don't parse response and gives raw json in response. Will be implemented in the future.
+        `WARNING`: This method actually don't parse response and gives raw json in response. Will be implemented in the future.
         """
-        data = self.api.exec_command(self.token, "get_error_code")
+        data = self.api.get_read_only_info(self.token, "get_error_code")
         
         return data
 
@@ -137,7 +144,7 @@ class System:
         """
         This method returns miner's access token.
         
-        WARNING: This method actually don't work. Will be implemented in the future.
+        `WARNING`: This method actually don't work. Will be implemented in the future.
         """
-        return self.api.exec_command(self.token, "get_token")
+        return self.api.get_read_only_info(self.token, "get_token")
     

@@ -6,6 +6,9 @@ from typing import Any
 
 
 class Power:
+    """
+    This class provides methods for miner's power system.
+    """
     def __init__(self, client):
         self.client = client
         self.api: WhatsminerAPI = client.api
@@ -53,7 +56,7 @@ class Power:
         """
         This method returns miner's power system status.
         """
-        data = process_response(self.api.exec_command(self.token, "get_psu"))
+        data = process_response(self.api.get_read_only_info(self.token, "get_psu"))
 
         return PSU(*data['Msg'].values())
     
