@@ -120,7 +120,7 @@ class System:
         
         `WARNING`: looks like fields are not working, in any case api returns all fields in response.
         """
-        data = self.api.get_read_only_info(self.token, "get_miner_info", {'info':f"{",".join(fields)}"})
+        data = self.api.get_read_only_info(self.token, "get_miner_info", {'info':f"{','.join(fields)}"})
         info = Info(**data['Msg'])
         
         return info
