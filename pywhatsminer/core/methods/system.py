@@ -35,7 +35,7 @@ class System:
         """
         This operation downloads miner's logs.
         """
-        return self.api.exec_command(self.token, "download_logs")
+        return self.api.exec_command(self.token, "download_logs", keep_alive=True)
     
     
     # TODO: Check status model

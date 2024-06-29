@@ -3,11 +3,11 @@ from setuptools import setup, find_packages
 
 setup(
   name = 'pywhatsminer',
-  version = '0.1.9',
+  version = '0.2',
   license='MIT',
   description = 'Unofficial Python based Api-Client (Wrapper) for MicroBT Whatsminer ASIC`s',
   long_description="See full README at https://github.com/DAAMCS/PyWhatsminer",
-  author = 'DAAMCS | Forked from Satoshi Anonymoto',
+  author = 'DAAMCS',
   author_email = 'me@daamcs.ru',
   url = 'https://github.com/DAAMCS/PyWhatsminer',
   download_url = 'https://github.com/DAAMCS/PyWhatsminer',

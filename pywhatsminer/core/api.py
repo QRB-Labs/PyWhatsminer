@@ -14,13 +14,16 @@ import os
 import re
 import select
 import socket
+import pickle
+
+from pywhatsminer.core.exceptions import ProcessError
+from contextlib import suppress
 
 from base64 import b64encode, b64decode
 from Crypto.Cipher import AES
 from passlib.hash import md5_crypt
 
 logger = logging.getLogger(__name__)
-
 
 
 """
@@ -57,6 +60,10 @@ class WhatsminerAccessToken:
             self._initialize_write_access()
 
 
+    def _wipe_cache(self):
+        os.remove(f"token_{self.ip_address}_{self.port}.pickle")
+        
+        
     def _initialize_write_access(self):
         """
         Encryption algorithm:
@@ -69,14 +76,34 @@ class WhatsminerAccessToken:
 
         Final assembly: enc|base64(aes256("token,sign|set_led|auto", $aeskey))
         """
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((self.ip_address, self.port))
-            s.sendall('{"cmd": "get_token"}'.encode('utf-8'))
-            data = recv_all(s, 4000)
+        try:
+            with open(f"token_{self.ip_address}_{self.port}.pickle", "rb") as f:
+                data = pickle.load(f)
+                token_info = data["token_info"]
+            
+                created = datetime.datetime.strptime(data["created"], "%Y-%m-%d_%H-%M-%S")
 
-        token_info = json.loads(data)["Msg"]
+            if datetime.datetime.now() - created > datetime.timedelta(minutes=30):
+                token_info = None
+        
+        except Exception as e:
+            token_info = None
+
+        if not token_info:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((self.ip_address, self.port))
+                s.sendall('{"cmd": "get_token"}'.encode('utf-8'))
+                data = recv_all(s, 4000)
+
+            token_info = json.loads(data)["Msg"]
+        
         if token_info == "over max connect":
             raise Exception(data)
+        else:
+            dump_dict = {"token_info": token_info, "created": datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}
+            
+            with open(f"token_{self.ip_address}_{self.port}.pickle", "wb") as f:
+                pickle.dump(dump_dict, f)
 
         # Make the encrypted key from the admin password and the salt
         pwd = crypt(self._admin_password, "$1$" + token_info["salt"] + '$')
@@ -149,7 +176,7 @@ class WhatsminerAPI:
 
 
     @classmethod
-    def exec_command(self, access_token: WhatsminerAccessToken, cmd: str, additional_params: dict = None):
+    def exec_command(self, access_token: WhatsminerAccessToken, cmd: str, additional_params: dict = None, keep_alive: bool = False):
         """ Send WRITEABLE API command.
 
             e.g. WhatsminerAPI.exec_command(access_token, cmd="power_off", additional_params={"respbefore": "true"})
@@ -157,7 +184,7 @@ class WhatsminerAPI:
             Returns: json response
         """
         if not access_token.has_write_access():
-            raise Exception("access_token must have write access")
+            ProcessError(23)
 
         # Assemble the plaintext json
         json_cmd = {"cmd": cmd, "token": access_token.sign}
@@ -178,32 +205,49 @@ class WhatsminerAPI:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((access_token.ip_address, access_token.port))
             s.send(api_packet_str.encode())
+
+            # Wait for the first response
             data = recv_all(s, 4000)
 
-        try:
-            json_response = json.loads(data.decode())
-            if "STATUS" in json_response and json_response["STATUS"] == "E":
-                logger.error(json_response["Msg"])
-                raise Exception(api_cmd + "\n" + json_response["Msg"])
+            if keep_alive:
+                s.settimeout(10)
+                with suppress(socket.timeout):
+                    data += recv_all(s, 4000)
 
-            resp_ciphertext = b64decode(json.loads(data.decode())["enc"])
-            resp_plaintext = access_token.cipher.decrypt(resp_ciphertext).decode().split("\x00")[0]
-            resp = json.loads(resp_plaintext)
-        except Exception as e:
-            logger.exception("Error decoding encrypted response")
             try:
-                logger.error(data.decode())
-            except:
-                pass
-            raise e
+                json_response = json.loads(data.decode(errors='ignore'))
+                if "STATUS" in json_response and json_response["STATUS"] == "E":
+                    logger.error(json_response["Msg"])
+                    
+                    if access_token._admin_password and json_response["Code"] == 23:
+                        ProcessError(24, json_response["Msg"])
+                    
+                resp_ciphertext = b64decode(json.loads(data.decode())["enc"])
+                resp_plaintext = access_token.cipher.decrypt(resp_ciphertext).decode().split("\x00")[0]
+                resp = json.loads(resp_plaintext)
+                
+                if "STATUS" in resp and resp["STATUS"] == "E":
+                    if resp["Code"] == 135:
+                        with suppress(FileNotFoundError):
+                            access_token._wipe_cache()
+                        return WhatsminerAPI.exec_command(access_token, cmd, additional_params, keep_alive)
+                    
+                    ProcessError(resp["Code"], resp["Msg"])
+
+            except Exception as e:
+                logger.exception("Error decoding encrypted response")
+                try:
+                    logger.error(data.decode())
+                except:
+                    pass
+                raise e
 
         return resp
 
 
-
 # ================================ misc helpers ================================
 def crypt(word, salt):
-    standard_salt = re.compile('\s*\$(\d+)\$([\w\./]*)\$')
+    standard_salt = re.compile(r'\s*\$(\d+)\$([\w\./]*)\$')
     match = standard_salt.match(salt)
     if not match:
         raise ValueError("salt format is not correct")
