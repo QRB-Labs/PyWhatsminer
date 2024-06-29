@@ -30,3 +30,7 @@ class Beacon(Client):
 
     def __repr__(self):
         return f"Beacon({self.clients})"
+
+
+    def __str__(self):
+        return f"Beacon({self.clients})"

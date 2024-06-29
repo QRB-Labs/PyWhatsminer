@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
   name = 'pywhatsminer',
-  version = '0.2',
+  version = '0.2.1',
   license='MIT',
   description = 'Unofficial Python based Api-Client (Wrapper) for MicroBT Whatsminer ASIC`s',
   long_description="See full README at https://github.com/DAAMCS/PyWhatsminer",
@@ -16,7 +16,8 @@ setup(
           'passlib',
           'pycryptodome',
           'dataclasses-json',
-          'Deprecated'
+          'Deprecated',
+          'networkscan'
       ],
   classifiers=[
 
