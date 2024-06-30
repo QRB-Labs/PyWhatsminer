@@ -5,7 +5,7 @@ _Code adapted from a python file found in the Whatsminer Telegram group that is 
 
 
 ## Installation
-Python 3.x is required.
+Python 3.x is required. (Tested on Python 3.11 and newer)
 
 ```
 pip install pywhatsminer
