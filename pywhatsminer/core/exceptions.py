@@ -25,5 +25,4 @@ def ProcessError(code = None, message = None):
         raise WhatsminerAPIError("Limit of number of connections exceeded. Try to use Client(cache=True) after cooldown to save your auth_token data and reduce the number of connections.", code)
     if code == 137:
         raise WhatsminerAPIError("Base64 decoding error.", code)
-    if code == _:
-        raise WhatsminerAPIError(message, code)
+    raise WhatsminerAPIError(message, code)

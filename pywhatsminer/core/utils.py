@@ -28,7 +28,7 @@ def process_response(response: dict) -> dict:
                 'N': False,
                 '': None
             }
-            if value in value_x5n.keys():
+            if value in value_xlation:
                 response[key] = value_xlation[value]
 
             if type(response[key]) == str and response[key].isdigit():
@@ -45,7 +45,7 @@ def process_response(response: dict) -> dict:
                 'enable': bool(response[key]),
             }
 
-            if key in key_xlation.keys():
+            if key in key_xlation:
                 response[key] = key_xlation[key]
 
     return response
