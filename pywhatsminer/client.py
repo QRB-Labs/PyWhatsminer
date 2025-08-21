@@ -2,7 +2,7 @@ from pywhatsminer.core import WhatsminerAccessToken, WhatsminerAPI
 from pywhatsminer.core.methods.power import Power
 from pywhatsminer.core.methods.system import System
 from pywhatsminer.core.methods.config import Config
-
+from typing import Optional
 
 class Client:
     """
@@ -17,7 +17,7 @@ class Client:
     asic.Power.on()
     ```
     """
-    def __init__(self, ip: str, port: int = 4028, password: str = None):
+    def __init__(self, ip: str, port: int = 4028, password: Optional[str] = None):
         self._access_token = WhatsminerAccessToken(ip, port, password)
         self.api = WhatsminerAPI()
 
