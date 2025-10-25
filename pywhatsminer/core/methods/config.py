@@ -23,7 +23,7 @@ class Config:
         return self.api.exec_command(self.token, "net_config", kwargs)
     
     
-    def manage_led(self, color: str | None = None, period: int | None = None, duration: int | None = None, start: int | None = None) -> Any:
+    def manage_led(self, color: str, period: int, duration: int, start: int) -> Any:
         """
         This operation manages miner's LED. If no fields are provided, it sets to auto control mode.
         
@@ -115,7 +115,7 @@ class Config:
         return self.api.exec_command(self.token, "set_timezone", {"timezone":timezone})
     
     
-    def load_log(self, ip: str, port: int | str, proto: str) -> Any:
+    def load_log(self, ip: str, port: int, proto: str) -> Any:
         """
         This operation configures the rsyslog log server. 
         

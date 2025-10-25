@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 from dataclasses_json import dataclass_json
 
 from datetime import datetime, timedelta
@@ -37,7 +38,7 @@ class Summary:
     chip_temp_avg: float
     btminer_fast_boot_enabled: str
     upfreq_complete: bool
-    
+
 
 # TODO: Validate models, maybe incorrect. Needs some tests.
 @dataclass_json
@@ -57,7 +58,7 @@ class Status:
 class PSU:
     name: str
     hardware_version: str
-    software_version: str 
+    software_version: str
     model: str
     enabled: bool
     iin: int
@@ -67,8 +68,8 @@ class PSU:
     serial_no: str
     vendor: int
     temperature: float
-    
-    
+
+
 @dataclass_json
 @dataclass
 class Api:
@@ -76,8 +77,8 @@ class Api:
     firmware_version: str
     platform: str
     chip: str
-    
-    
+
+
 @dataclass_json
 @dataclass
 class DevDetail:
@@ -86,14 +87,14 @@ class DevDetail:
     driver: str
     kernel: str
     model: str
-    
-    
+
+
 @dataclass_json
 @dataclass
 class DevDetails:
-    details: list[DevDetail]
-    
-    
+    details: List[DevDetail]
+
+
 @dataclass_json
 @dataclass
 class Dev:
@@ -118,13 +119,13 @@ class Dev:
     chip_temp_max: float
     chip_temp_avg: float
     chip_vol_diff: int
-    
+
 
 @dataclass_json
 @dataclass
 class Devs:
-    devs: list[Dev]
-    
+    devs: List[Dev]
+
 
 @dataclass_json
 @dataclass
@@ -152,30 +153,30 @@ class Pool:
     current_block_height: int
     current_block_version: int
     to_remove: bool
-    
+
 
 @dataclass_json
 @dataclass
 class Pools:
-    pools: list[Pool]
-    
-    
+    pools: List[Pool]
+
+
 @dataclass_json
 @dataclass
 class Info:
-    ntp: list[str] | None = None
-    ip: str | None = None
-    proto: str | None = None
-    netmask: str | None = None
-    gateway: str | None = None
-    dns: str | None = None
-    hostname: str | None = None
-    mac: str | None = None
-    ledstat: str | None = None
-    minersn: str | None = None
-    powersn: str | None = None
-    
-    
+    ntp: List[str] # None = None
+    ip: str # None = None
+    proto: str # None = None
+    netmask: str # None = None
+    gateway: str # None = None
+    dns: str # None = None
+    hostname: str # None = None
+    mac: str # None = None
+    ledstat: str # None = None
+    minersn: str # None = None
+    powersn: str # None = None
+
+
 @dataclass_json
 @dataclass
 class ErrorCode:
@@ -186,4 +187,4 @@ class ErrorCode:
 @dataclass_json
 @dataclass
 class Errors:
-    codes = list[ErrorCode]
+    codes = List[ErrorCode]
